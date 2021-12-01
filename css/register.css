@@ -1,0 +1,65 @@
+/* Register Form Css*/
+/*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+
+.border-md {
+    border-width: 2px;
+  }
+  
+  .btn-facebook {
+    background: #4F9C00;
+    border: none;
+  }
+  
+  .btn-facebook:hover, .btn-facebook:focus {
+    background: #4F9C00;
+  }
+  
+  .btn-twitter {
+    background: #4F9C00;
+    border: none;
+  }
+  
+  .btn-twitter:hover, .btn-twitter:focus {
+    background: #4F9C00;
+  }
+  
+  
+  
+  /*
+  *
+  * ==========================================
+  * FOR DEMO PURPOSES
+  * ==========================================
+  *
+  */
+  
+  body {
+    min-height: 100vh;
+  }
+  
+  .form-control:not(select) {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  select.form-control {
+    height: 52px;
+    padding-left: 0.5rem;
+  }
+  
+  .form-control::placeholder {
+    color: #4F9C00;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  .form-control:focus {
+    box-shadow: none;
+  }
+  .color{
+    color: #4F9C00;
+  }
