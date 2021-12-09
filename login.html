@@ -50,7 +50,7 @@
 
         <!-- Registeration Form -->
         <div class="col-md-7 col-lg-6 ml-auto">
-            <form action="#">
+            <form id="loginUser" action="login.php">
                 <div class="row">
 
                    
@@ -80,9 +80,10 @@
                     
                     <!-- Submit Button -->
                     <div class="form-group col-lg-12 mx-auto mb-0">
-                        <a href="#" class="btn btn-success btn-block py-2">
-                            <span class="font-weight-bold">Login</span>
-                        </a>
+                        <input type="submit"  value="Login" class="btn btn-success btn-block py-2">
+                    </div>
+                    <div class="col-lg-12 mx-auto mb-2" id="FeedBackMessage">
+
                     </div>
 
                     <!-- Divider Text -->
@@ -102,6 +103,8 @@
         </div>
     </div>
 </div>
+<script src="js/Jquery.js"></script>
+
 
 <script>
     // For Demo Purpose [Changing input group text on focus]
@@ -116,5 +119,34 @@ $(function () {
 
 </script>
 
+<script>
+
+    $(document).ready(() => {
+    
+    $('#loginUser').submit((e) => {
+        e.preventDefault();
+
+        
+        const Email = $('#email').val();
+       
+        const password = $('#password').val();
+        
+        $.ajax({
+            type: 'POST',
+            url:'login.php',
+            data:{
+                email: Email,
+                password: password
+            },
+            success: (data) => {
+                console.log(JSON.stringify(data));
+                window.location.href = 'submit.html'
+                
+            }
+        });
+    })
+    
+})
+</script>
 </body>
 </html>

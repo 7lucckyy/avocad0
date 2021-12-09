@@ -1,12 +1,14 @@
 <?php
 include 'config.php';
 
-try{
-    
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+
         $email=stripcslashes($_POST['email']);
         $email = mysqli_real_escape_string($conn, $email);
         $password=$_POST['password'];
         $password = mysqli_real_escape_string($conn, $password);
+}
+try{
 
         $sql = "SELECT * FROM users WHERE email = '$email' ";  
         $result = mysqli_query($conn, $sql);  
