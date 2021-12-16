@@ -1,5 +1,8 @@
 <?php
 include 'config.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+require_once 'JwtHandler.php';
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
 
@@ -23,8 +26,24 @@ try{
             http_response_code(200);
             mysqli_query($conn, $sql);
             $message = json_encode(array("message" => "Login Success", "status" => true));	
-            echo $message;
-            exit();  
+            
+             // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
+            // IF PASSWORD IS CORRECT THEN SEND THE LOGIN TOKEN
+            $jwt = new JwtHandler();
+            $token = $jwt->_jwt_encode_data(
+            'avocad0/',
+            array("id"=> $row['id'])
+            );
+        
+            $returnData = [
+                'message' => 'You have successfully logged in.',
+                'token' => "Bearer $token"
+            ];
+
+            echo $token;
+            exit();
+            
+              
         } else {
             header("Content-Type: application/json");
             http_response_code(401);

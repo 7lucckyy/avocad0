@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+
+  <meta charset="utf-8">
+  <title>Avocado BooksNG</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link href="img/fav.png" rel="icon">
+  <link href="img/fav.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="lib/animate/animate.min.css" rel="stylesheet">
+  <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <!-- <link href="css/style.css" rel="stylesheet"> -->
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="col-lg-12 m-6 bg-light">
+      <div class="col-md-12 mt-3">
+        <br>
+        <label for="Fullname">Full Name:</label>
+        <div id="fullname"></div>
+      </div>
+      <div class="col-md-12">
+        <label for="Fullname">Email:</label>
+        <div id="Email"></div>
+      </div>
+      <div class="col-md-12">
+        <label for="Earnings">Earnings</label>
+      </div>
+    </div>
+    <br>
+  </div>
+  <div class="container">
+    
+    <div class="col-lg-12 mx-auto mt-3 mb-3 ">
+      <form id="submitBook" action="submitWork.php">
+        <div class="form-row">
+          <div class="col-lg-12" id="errorFeedBack"></div>
+          <div class="form-group col-md-12">
+            <label for="NameofBook4">Full Name</label>
+            <input type="text" id="fullName" class="form-control" id="inputEmail4" placeholder="Your Full Name" required>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="TitleBook4">Email</label>
+            <input type="text" class="form-control" id="emailAddress" placeholder="Email Address">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputAddress2">Description of the project</label>
+          <textarea class="form-control" id="description" placeholder="Description of the Project"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="NameofBook4">Phone Number</label>
+          <input type="text" id="phone" class="form-control" id="inputEmail4" placeholder="Phone Number">
+        </div>
+        
+        <div class="form-row">
+          <div class="col-lg-12">
+            <input type="submit" id="SubmitContent" class="alert alert-success"value="Submit">
+          </div>
+          
+        </div>
+        
+      </form>
+    </div>
+  </div>
+  <script src="js/Jquery.js"></script>
+  <script>
+      $(document).ready(() => {
+    
+    $('#submitBook').submit((e) => {
+        e.preventDefault();
+
+        
+        const fullName = $('#fullName').val();
+       
+        const email = $('#emailAddress').val();
+
+        const Description = $('#description').val();
+
+        const phone = $('#phone').val();
+
+         
+
+        if(fullName == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Full Name is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(email == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Email Address is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(Description == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger">Description is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(phone == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Phone number is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+
+        const fd = new FormData();
+        
+        fd.append('fullName',fullName);
+        fd.append('email',email);
+        fd.append('description',Description);
+        fd.append('phone', phone);
+        
+    
+        $.ajax({
+            type: 'POST',
+            url:'consult.php',
+            data:{
+                fullName: fullName,
+                email: email,
+                Description: Description,
+                phone: phone
+            },
+            success: (data) => {
+                console.log(data);
+                
+            }
+        });
+    })
+    
+})
+  </script>
+
+</body>
+</html>

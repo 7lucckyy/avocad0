@@ -27,9 +27,14 @@
   <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
   <!-- Main Stylesheet File -->
-  <!-- <link href="css/style.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="css/submit.css">
+
+
 </head>
+
 <body>
+
+  
   <div class="container mt-5">
     <div class="col-lg-12 m-6 bg-light">
       <div class="col-md-12 mt-3">
@@ -52,6 +57,7 @@
     <div class="col-lg-12 mx-auto mt-3 mb-3 ">
       <form id="submitBook" action="submitWork.php">
         <div class="form-row">
+          <div class="col-lg-12" id="errorFeedBack"></div>
           <div class="form-group col-md-12">
             <label for="NameofBook4">Name of the Book</label>
             <input type="text" id="bookName" class="form-control" id="inputEmail4" placeholder="Name of the Book">
@@ -64,6 +70,10 @@
         <div class="form-group">
           <label for="inputAddress2">Description of the Book</label>
           <textarea class="form-control" id="description" placeholder="Description of the Book"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="NameofBook4">Author Name</label>
+          <input type="text" id="nameAuthor" class="form-control" id="inputEmail4" placeholder="Name of the Book">
         </div>
         <div class="form-group">
           <label for="inputAddress2">About the Author</label>
@@ -105,30 +115,59 @@
 
         const Description = $('#description').val();
 
+        const authorName = $('#nameAuthor').val();
+
         const aboutAuthor = $('#aboutAuthor').val();
 
         const uploadBook = $('#uploadBook')[0].files[0];
-        console.log(uploadBook);
-       
-
-        const uploadCover = $('#uploadCover')[0].files[0];
-        console.log(uploadCover);
         
+        const uploadCover = $('#uploadCover')[0].files[0];
+
+        if(BookName == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Book Name is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(BookTitle == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Book Title is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(Description == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Book Description is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(authorName == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Author Name is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(aboutAuthor == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> About Author  is required</div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+        if(uploadBook == ""){
+          const emptyError = '<div class="col-lg-12 alert alert-danger"> Upload Book </div>';
+          $('#errorFeedBack').html(emptyError);
+        }
+          
+        
+        const fd = new FormData();
+        
+        fd.append('bookName',BookName);
+        fd.append('bookTitle',BookTitle);
+        fd.append('description',Description);
+        fd.append('authorName', authorName);
+        fd.append('aboutAuthor',aboutAuthor);
+        fd.append('uploadBook',uploadBook);
+        fd.append('uploadCover',uploadCover);
+
         $.ajax({
             type: 'POST',
             url:'submitWork.php',
             processData: false,
             contentType: false,
-            data:{
-                bookname: BookName,
-                BookTitle: BookTitle,
-                Description: Description,
-                aboutAuthor: aboutAuthor,
-                uploadBook: uploadBook,
-                uploadCover: uploadCover
-            },
+            cache: false,
+            data:fd,
             success: (data) => {
-                //console.log(data);
+                
             }
         });
     })
@@ -136,9 +175,5 @@
 })
   </script>
 
-  <!-- <script>
-     
-  </script> -->
- 
 </body>
 </html>
