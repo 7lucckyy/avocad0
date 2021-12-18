@@ -33,7 +33,6 @@
             <!-- Navbar Brand -->
             <a href="#" class="navbar-brand">
                 <img src="img/fav.png" alt="logo" width="150">
-               <strong>Avocadodo Books NG</strong>  
             </a>
         </div>
     </nav>
@@ -44,7 +43,7 @@
     <div class="row py-5 mt-4 align-items-center">
         <!-- For Demo Purpose -->
         <div class="col-md-5 pr-lg-5 mb-5 mb-md-0">
-            <img src="login.svg" alt="" class="img-fluid mb-3 d-none d-md-block">
+            <img src="img/login.svg" alt="" class="img-fluid mb-3 d-none d-md-block">
             
         </div>
 
@@ -80,9 +79,9 @@
                     
                     <!-- Submit Button -->
                     <div class="form-group col-lg-12 mx-auto mb-0">
-                        <input type="submit"  value="Login" class="btn btn-success btn-block py-2">
+                        <input type="submit"  value="Login" id="loginButton" class="btn btn-success btn-block py-2">
                     </div>
-                    <div class="col-lg-12 mx-auto mb-2" id="FeedBackMessage">
+                    <div class="col-lg-12 mx-auto mb-2 mt-3" id="FeedBackMessage">
 
                     </div>
 
@@ -127,21 +126,65 @@ $(function () {
         e.preventDefault();
 
         
-        const Email = $('#email').val();
-       
+        const email = $('#email').val();
         const password = $('#password').val();
+
+        if(email == '' || password == ''){
+            const message = `<div class="col-lg-12 mb-4 alert alert-danger">
+                <p>Email Address is required</p>
+                <p>Password is required</p>
+                </div>`;
+                $('#FeedBackMessage').html(message)
+            return;
+        }
+        const data = {
+            email,
+            password
+        }
         
         $.ajax({
             type: 'POST',
-            url:'login.php',
-            data:{
-                email: Email,
-                password: password
+            url:'/avocad0/api/login.php',
+            data:JSON.stringify(data),
+            dataType:'json',
+            processData: false,
+            beforeSend: () => {
+                const message = `<div class="alert alert-info">
+                <p>Please wait while authenticating...</p>
+                </div>`;
+                $('#FeedBackMessage').html(message);
+                $('#loginButton').prop('disabled',true);
             },
             success: (data) => {
-                console.log(JSON.stringify(data));
-                window.location.href = 'submit.html'
+                localStorage.setItem("jwt-token-avocad0",data.token);
+                const message = `<div class="alert alert-success">
+                <p>Redirecting user...</p>
+                </div>`;
+                $('#FeedBackMessage').html(message);
+                window.location.href = '/avocad0/public/submit.html';
                 
+            },
+            error: (jqXHR,textStatus,errorThrown) => {
+                const responseJson = jqXHR.responseJSON;
+                $('#FeedBackMessage').html("");
+                if (!responseJson) {
+                    const message = `<div class="alert alert-danger">
+                    <p>Email Address is required</p>
+                    <p>Password is required</p>
+                    </div>`;
+                    $('#FeedBackMessage').html(message)
+                    return;
+                }
+                else{
+                    const message = `<div class="alert alert-danger">
+                    ${responseJson.message}
+                    </div>`;
+                    $('#FeedBackMessage').html(message)
+                    return;
+                }
+            },
+            complete: () => {
+                $('#loginButton').prop('disabled',false);
             }
         });
     })

@@ -26,28 +26,55 @@
   <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
   <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
   <!-- Main Stylesheet File -->
-  <link rel="stylesheet" href="css/submit.css">
+  <link href="css/submit.css" rel="stylesheet">
 
 
 </head>
 
 <body>
+</header>
+<header id="header" class="fixed-top">
+  <div class="container">
 
-  
+    <div class="logo float-left">
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <h1 class="text-light"><a href="#header"><span>NewBiz</span></a></h1> -->
+      <a href="#intro" class="scrollto"><img src="img/fav.png" alt="" class="img-fluid">Avocado BooksNG</a>
+    </div>
+
+    <nav class="main-nav float-right d-none d-lg-block">
+      <ul>
+        <li><a href="submit.html">New</a></li>
+        <li><a href="consult.html">Consult</a></li>
+        <li><a href="#services">Payout</a></li>
+       
+      </ul>
+    </nav><!-- .main-nav -->
+    
+  </div>
+</header>
+<div class="col-lg-12 mt-5">
+  <br>
+  <br>
+</div>
+
   <div class="container mt-5">
     <div class="col-lg-12 m-6 bg-light">
+      <div id="feedbackMessage"></div>
       <div class="col-md-12 mt-3">
         <br>
-        <label for="Fullname">Full Name:</label>
-        <div id="fullname"></div>
+        <div id="fullName"></div>
       </div>
       <div class="col-md-12">
-        <label for="Fullname">Email:</label>
-        <div id="Email"></div>
+        <div id="email"></div>
       </div>
       <div class="col-md-12">
-        <label for="Earnings">Earnings</label>
+        <div id="earnings"></div>
       </div>
     </div>
     <br>
@@ -104,7 +131,31 @@
   <script src="js/Jquery.js"></script>
   <script>
       $(document).ready(() => {
-    
+        $.ajax({
+          type: 'GET',
+          url: '/avocad0/api/dashboard.php',
+          dataType: 'json',
+          headers: {
+            'Authorization': localStorage.getItem('jwt-token-avocad0')
+          },
+          beforeSend: () => {
+            $('#feedbackMessage').html(`<div class="alert alert-info">Fetching user data...</div>`);
+          },
+          success: (data) => {
+            const author = data.data;
+            console.log(author);
+            $('#fullName').html(`<label for="fullName">Full Name:</label> <b>${author.name}</b>`);
+            $('#email').html(`<label for="Fullname">Email:</label> <b>${author.email}</b>`);
+            $('#earnings').html(`<label for="earnings">Earnings:</label> <b>${author.earnings}<b>`);
+          },
+          error: (jqXHR,textStatus,errorThrown) => {
+            location.href = '/avocad0/public/login.html';
+            return;
+          },
+          complete: () => {
+            $('#feedbackMessage').html(``);
+          }
+        });
     $('#submitBook').submit((e) => {
         e.preventDefault();
 
@@ -161,7 +212,7 @@
 
         $.ajax({
             type: 'POST',
-            url:'submitWork.php',
+            url:'../api/submitWork.php',
             processData: false,
             contentType: false,
             cache: false,
