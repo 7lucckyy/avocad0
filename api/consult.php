@@ -1,60 +1,59 @@
 <?php
     include 'config.php';
+    require_once './config/functions.php';
 
+    header("Content-Type: application/json");
     if ($_SERVER['REQUEST_METHOD'] == "POST") 
 
     {
-                
+        $data = json_decode(file_get_contents("php://input"));
 
-            $fullName = $_POST['fullName'];
-            $email= $_POST['email'];
-            $Description = $_POST['Description'];
-            $phone= $_POST['phone'];
+        if(
+            isset($data->fullName) == false || empty($data->fullName) == true ||
+            isset($data->email) == false || empty($data->email) == true || 
+            isset($data->phone) == false || empty($data->phone) == true ||
+            isset($data->description) == false || empty($data->description) == true
+        ) 
+        {
+            
+            $fields = ['fields' => ['fullName','email','phone','Description']];
+            http_response_code(400);    
+            echo GenerateResponseMessage(false,400,'Fields are required',$fields);
+            exit();
+        }   
+
+            $fullName = $data->fullName;
+            $email= $data->email;
+            $Description = $data->description;
+            $phone= $data->phone;
+            echo "$fullName $Description";
+            exit();
         
-            if (empty($fullName) == true || strlen($fullName) < 6)
+            if (strlen($phone) < 10)
             {
-                header("Content-Type: application/json");
                 http_response_code(400);
-                $message = json_encode(array("message" => "Name is required", "status" => false));	
-                echo $message;
-                exit();        
-            }
-            if (empty($email) == true || strlen($email) < 10)
-            {
-                header("Content-Type: application/json");
-                http_response_code(400);
-                $message = json_encode(array("message" => "Email Address is required", "status" => false));	
-                echo $message;
-                exit();        
-            }
-            if (empty($phone) == true || strlen($phone) < 8)
-            {
-                header("Content-Type: application/json");
-                http_response_code(400);
-                $message = json_encode(array("message" => "Phone number is required", "status" => false));	
-                echo $message;
+                echo GenerateResponseMessage(false,400, 'Phone number can not be less than 10 characters"');
                 exit();        
             }
 
-            $consultID = uniqid();
-            $isAssisted = 0;
-
-            $sql = "INSERT INTO `bookconsults`( `id`, `client_name`,`email`, `phone`, `description`, `is_assited`)
-                VALUES ('$consultID','$fullName', '$email','$phone', '$Description', '$isAssisted')";
-        
             try {
-                header("Content-Type: application/json");
-                http_response_code(201);
+
+                $consultID = GenerateUUID();
+                $isAssisted = 0;
+
+                $sql = "INSERT INTO `bookconsults`( `id`, `client_name`,`email`, `phone`, `description`, `is_assited`)
+                    VALUES ('$consultID','$fullName', '$email','$phone', '$Description', '$isAssisted')";
+
                 mysqli_query($conn, $sql);
-                $message = json_encode(array("message" => "Consult Successfully", "status" => true));	
-                echo $message;
+                                        
+                http_response_code(201);
+                echo GenerateResponseMessage(true,201,'Signup Successfully');
                 exit();  
         
                 
             } catch (\Exception $e) {
-                http_response_code(500);
-                $message = json_encode(array("message" => "Something went wrong", "status" => false));	
-                echo $message .$e->getMessage();
+                http_response_code(500);	
+                echo GenerateResponseMessage(false, 500, 'Something went wrong');
                 exit();  
             }
 

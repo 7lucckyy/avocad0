@@ -42,14 +42,14 @@
             echo "Document must be less than 2MB";
             exit();
         }
-        $upload_path = "uploads/";
+        $upload_path = './uploads';
         
         $newFileName1 = time().".".$ext;
         
         if(move_uploaded_file($tempPath, $upload_path . $newFileName1) == false) {
             header("Content-Type: application/json");
             http_response_code(400);
-            echo "Failed to upload blog photo";
+            echo "Failed to upload Book";
             exit();
         }
         }
@@ -84,14 +84,14 @@
             echo "Image must be less than 2MB";
             exit();
         }
-        $upload_path = "uploads/";
+        $upload_path = './uploads';
         
         $newFileName = time().".".$ext;
         
         if(move_uploaded_file($tempPath, $upload_path . $newFileName) == false) {
             header("Content-Type: application/json");
             http_response_code(400);
-            echo "Failed to upload blog photo";
+            echo "Failed to upload photo";
             exit();
         }
         
